@@ -97,19 +97,18 @@ export default function StudentsPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-            <Link
+            {/* <Link
               href="/admin/student/create"
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex-shrink-0"
             >
               Thêm học sinh mới
-            </Link>
+            </Link> */}
           </div>
 
           <div className="overflow-x-auto bg-white rounded-xl shadow">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-blue-50 text-black">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Avatar</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tên học sinh</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ngày sinh</th>
@@ -121,7 +120,6 @@ export default function StudentsPage() {
               <tbody className="divide-y divide-gray-100 text-black">
                 {students.map((s: any) => (
                   <tr key={s.id} className="hover:bg-blue-50 transition">
-                    <td className="px-6 py-3">{s.id}</td>
                     <td className="px-6 py-3">
                       <img
                         src={s.avatar || "/default-avatar.png"}
@@ -164,7 +162,7 @@ export default function StudentsPage() {
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
+          {totalPages > 0 && (
             <div className="flex justify-center items-center mt-6 gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button

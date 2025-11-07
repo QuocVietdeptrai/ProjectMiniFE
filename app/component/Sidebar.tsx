@@ -9,6 +9,7 @@ const menuItems = [
   { name: "Sản phẩm", href: "/admin/product" },
   { name: "Học sinh", href: "/admin/student" },
   { name: "Đơn hàng", href: "/admin/order" },
+  { name: "Quản trị tài khoản", href: "/admin/user" },
 ];
 
 export default function Sidebar() {
@@ -52,28 +53,6 @@ export default function Sidebar() {
                   : "text-gray-300 hover:bg-gray-800 hover:text-white"
               }`}
             >
-              <span className="w-5 h-5">
-                {item.name === "Dashboard" && (
-                  <svg className="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                  </svg>
-                )}
-                {item.name === "Sản phẩm" && (
-                  <svg className="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                  </svg>
-                )}
-                {item.name === "Học sinh" && (
-                  <svg className="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                  </svg>
-                )}
-                {item.name === "Đơn hàng" && (
-                  <svg className="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                )}
-              </span>
               {item.name}
             </Link>
           ))}

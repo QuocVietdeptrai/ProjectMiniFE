@@ -22,10 +22,21 @@ export default function OrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const statusLabels: Record<string, string> = {
+    pending: "Chờ xử lý",
+    completed: "Hoàn thành",
+    canceled: "Đã hủy",
+  };
+
   const statusColors: Record<string, string> = {
     pending: "bg-yellow-100 text-yellow-800",
     completed: "bg-green-100 text-green-800",
     canceled: "bg-red-100 text-red-800",
+  };
+
+  const paymentLabels: Record<string, string> = {
+    cash: "Tiền mặt",
+    bank: "Chuyển khoản",
   };
 
   const fetchOrders = async (page = 1, search = "") => {
@@ -74,7 +85,6 @@ export default function OrdersPage() {
     const debounce = setTimeout(() => {
       fetchOrders(1, searchTerm);
     }, 500);
-
     return () => clearTimeout(debounce);
   }, [searchTerm]);
 
@@ -97,43 +107,49 @@ export default function OrdersPage() {
             />
 
             <Link
-              href="/admin/orders/create"
+              href="/admin/order/create"
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex-shrink-0"
             >
               Thêm đơn hàng mới
             </Link>
           </div>
 
-
           <div className="overflow-x-auto bg-white rounded-xl shadow">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-blue-50 text-black">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Khách hàng</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tổng tiền</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phương thức thanh toán</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Trạng thái</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ngày tạo</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Hành động</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-gray-100 text-black">
                 {orders.map((order: any) => (
                   <tr key={order.id} className="hover:bg-blue-50 transition">
-                    <td className="px-6 py-3">{order.id}</td>
                     <td className="px-6 py-3">{order.customer_name}</td>
                     <td className="px-6 py-3">{Number(order.total).toLocaleString()}₫</td>
+                    <td className="px-6 py-3">
+                      {paymentLabels[order.payment_method] || "Không xác định"}
+                    </td>
                     <td className="px-6 py-3">
                       <span
                         className={`px-2 py-1 rounded-full text-sm font-medium ${
                           statusColors[order.status] || "bg-gray-100 text-gray-800"
                         }`}
                       >
-                        {order.status}
+                        {statusLabels[order.status] || order.status}
                       </span>
+                    </td>
+                    <td className="px-6 py-3">
+                      {new Date(order.created_at).toLocaleDateString("vi-VN")}
                     </td>
                     <td className="px-6 py-3 flex gap-2">
                       <button
-                        onClick={() => router.push(`/admin/orders/${order.id}`)}
+                        onClick={() => router.push(`/admin/order/${order.id}`)}
                         className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition"
                       >
                         Chi tiết
@@ -147,9 +163,10 @@ export default function OrdersPage() {
                     </td>
                   </tr>
                 ))}
+
                 {orders.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-gray-500">
+                    <td colSpan={7} className="text-center py-8 text-gray-500">
                       Không tìm thấy đơn hàng
                     </td>
                   </tr>
