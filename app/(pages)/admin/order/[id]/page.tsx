@@ -25,7 +25,7 @@ export default function EditOrderPage() {
   const [status, setStatus] = useState("");
   const [orderDate, setOrderDate] = useState("");
 
-  // ✅ Lấy danh sách sản phẩm
+  // Lấy danh sách sản phẩm
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -41,7 +41,7 @@ export default function EditOrderPage() {
     fetchProducts();
   }, []);
 
-  // ✅ Lấy chi tiết đơn hàng
+  // Lấy chi tiết đơn hàng
     useEffect(() => {
     const fetchOrder = async () => {
         try {
@@ -52,7 +52,6 @@ export default function EditOrderPage() {
 
         if (data.status === "success") {
             const order = data.data;
-
             setStudent({
             full_name: order.student?.full_name || order.customer_name || "",
             class: order.student?.class || "",
@@ -85,10 +84,10 @@ export default function EditOrderPage() {
     }, [id, products]);
 
 
-  // ✅ Tổng tiền
+  // Tổng tiền
   const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  // ✅ Xử lý đổi sản phẩm
+  // Xử lý đổi sản phẩm
   const handleProductChange = (index: number, productId: string) => {
     const product = products.find((p) => p.id == productId);
     const updated = [...orderItems];
@@ -106,14 +105,14 @@ export default function EditOrderPage() {
     setOrderItems(updated);
   };
 
-  // ✅ Đổi số lượng
+  // Đổi số lượng
   const handleQuantityChange = (index: number, quantity: number) => {
     const updated = [...orderItems];
     updated[index].quantity = quantity;
     setOrderItems(updated);
   };
 
-  // ✅ Thêm / xóa sản phẩm
+  // Thêm / xóa sản phẩm
   const addProductRow = () =>
     setOrderItems([
       ...orderItems,
@@ -122,7 +121,7 @@ export default function EditOrderPage() {
   const removeProductRow = (index: number) =>
     setOrderItems(orderItems.filter((_, i) => i !== index));
 
-  // ✅ Cập nhật đơn hàng
+  // Cập nhật đơn hàng
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
 
