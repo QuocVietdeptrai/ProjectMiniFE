@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useState } from "react";
@@ -13,7 +14,7 @@ export default function Taskbar() {
       .then(res => res.json())
       .then(data => {
         if (data.code === "success" && data.user) {
-          setUser(data.user); // <-- Lấy đúng user
+          setUser(data.user);
         }
       })
       .catch(err => console.error(err));

@@ -19,7 +19,7 @@ export default function FormDashboard({ children }: { children: React.ReactNode 
     <div className="flex bg-gray-100 min-h-screen">
       <Sidebar />
       <main className="flex-1 flex flex-col overflow-auto">
-        <Taskbar/>
+        <Taskbar />
         <div className="p-6 flex-1">{children}</div>
       </main>
     </div>

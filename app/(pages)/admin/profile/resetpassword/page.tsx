@@ -3,15 +3,12 @@
 
 import Sidebar from "@/app/component/Sidebar";
 import Taskbar from "@/app/component/Taskbar";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import JustValidate from "just-validate";
 
 export default function FormResetPassword() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email"); // có thể bỏ nếu không dùng
-
   useEffect(() => {
     const validator = new JustValidate("#formResetPassword");
 
@@ -50,7 +47,7 @@ export default function FormResetPassword() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // <-- gửi cookie JWT như update_profile
+          credentials: "include", 
           body: JSON.stringify({ password, password_confirmation }),
         })
           .then((res) => res.json())

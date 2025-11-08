@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -32,7 +33,7 @@ export default function ProfilePage() {
             phone: u.phone || "",
             address: u.address || "",
           });
-          setAvatarPreview(u.image || "");
+          setAvatarPreview(u.image);
         }
       } catch (err) {
         console.error("Lỗi lấy user:", err);
@@ -88,7 +89,7 @@ export default function ProfilePage() {
     <div className="flex bg-white min-h-screen">
       <Sidebar />
       <main className="flex-1 flex flex-col overflow-auto bg-white">
-        <Taskbar/>
+        <Taskbar />
 
         <div className="p-6 flex-1 flex justify-center bg-white">
           <div className="bg-white shadow-xl rounded-2xl w-full max-w-2xl overflow-hidden">
@@ -164,7 +165,7 @@ export default function ProfilePage() {
               >
                 Đổi mật khẩu
               </Link>
-              
+
             </div>
           </div>
         </div>

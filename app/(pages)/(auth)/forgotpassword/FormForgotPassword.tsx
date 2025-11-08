@@ -61,7 +61,6 @@ export default function FormForgotPassword() {
         />
       </div>
 
-      {/* Nút Gửi yêu cầu - TRẮNG, ĐỒNG BỘ */}
       <button
         type="submit"
         className="bg-white border-2 border-[#0088FF] text-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] hover:bg-[#0088FF] hover:text-white transition-all duration-300"

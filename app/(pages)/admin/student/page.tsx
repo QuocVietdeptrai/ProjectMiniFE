@@ -1,10 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Sidebar from "@/app/component/Sidebar";
 import Taskbar from "@/app/component/Taskbar";
 import { useRole } from "@/hook/useRole";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -118,30 +118,30 @@ export default function StudentsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-black">
-                {students.map((s: any) => (
-                  <tr key={s.id} className="hover:bg-blue-50 transition">
+                {students.map((item: any) => (
+                  <tr key={item.id} className="hover:bg-blue-50 transition">
                     <td className="px-6 py-3">
                       <img
-                        src={s.avatar || "/default-avatar.png"}
-                        alt={s.full_name}
+                        src={item.avatar}
+                        alt={item.full_name}
                         className="w-16 h-16 rounded object-cover"
                       />
                     </td>
-                    <td className="px-6 py-3 font-medium">{s.full_name}</td>
-                    <td className="px-6 py-3">{s.dob}</td>
-                    <td className="px-6 py-3">{s.class}</td>
-                    <td className="px-6 py-3">{s.phone}</td>
+                    <td className="px-6 py-3 font-medium">{item.full_name}</td>
+                    <td className="px-6 py-3">{item.dob}</td>
+                    <td className="px-6 py-3">{item.class}</td>
+                    <td className="px-6 py-3">{item.phone}</td>
                     <td className="px-6 py-3">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => router.push(`/admin/student/${s.id}`)}
+                          onClick={() => router.push(`/admin/student/${item.id}`)}
                           className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition"
                         >
                           Sửa
                         </button>
 
                         <button
-                          onClick={() => handleDelete(s.id)}
+                          onClick={() => handleDelete(item.id)}
                           className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition"
                         >
                           Xóa
@@ -168,11 +168,10 @@ export default function StudentsPage() {
                 <button
                   key={page}
                   onClick={() => fetchStudents(page, searchTerm)}
-                  className={`px-3 py-1 rounded border text-sm font-medium transition ${
-                    page === currentPage
+                  className={`px-3 py-1 rounded border text-sm font-medium transition ${page === currentPage
                       ? "bg-blue-600 text-white border-blue-600"
                       : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   {page}
                 </button>

@@ -9,23 +9,32 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const roleLabels: Record<string, string> = {
+    admin: "Admin",
+    user: "Người dùng",
+    product_manager: "Quản lý sản phẩm",
+    student_manager: "Quản lý học sinh",
+    order_manager: "Quản lý đơn hàng",
+};
+const statusLabels: Record<string, string> = {
+    active: "Hoạt động",
+    inactive: "Dừng hoạt động"
+};
+
 export default function ProductsPage() {
   const { user } = useRole([
     "admin",
-    "product_manager",
-    "order_manager",
-    "student_manager",
   ]);
 
   const router = useRouter();
-  const [products, setProducts] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchProducts = async (page = 1, search = "") => {
+  const fetchUsers = async (page = 1, search = "") => {
     try {
-      const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/products/list`);
+      const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/users/list`);
       url.searchParams.append("page", page.toString());
       if (search) url.searchParams.append("search", search);
 
@@ -33,22 +42,22 @@ export default function ProductsPage() {
       const data = await res.json();
 
       if (data.status === "success" && Array.isArray(data.data.data)) {
-        setProducts(data.data.data);
+        setUsers(data.data.data);
         setCurrentPage(data.data.current_page);
         setTotalPages(data.data.last_page);
       } else {
-        console.error("Không lấy được danh sách sản phẩm", data);
+        console.error("Không lấy được danh sách người dùng", data);
       }
     } catch (error) {
-      console.error("Lỗi fetch sản phẩm:", error);
+      console.error(error);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) return;
+    if (!confirm("Bạn có chắc chắn muốn xóa người dùng này?")) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/delete/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/delete/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -56,7 +65,7 @@ export default function ProductsPage() {
       const data = await res.json();
 
       if (data.status === "success") {
-        fetchProducts(currentPage, searchTerm); // fetch lại trang hiện tại sau khi xóa
+        fetchUsers(currentPage, searchTerm); // fetch lại trang hiện tại sau khi xóa
       } else {
         alert(data.message || "Xóa thất bại!");
       }
@@ -68,7 +77,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     const debounce = setTimeout(() => {
-      fetchProducts(1, searchTerm);
+      fetchUsers(1, searchTerm);
     }, 500);
 
     return () => clearTimeout(debounce);
@@ -92,10 +101,10 @@ export default function ProductsPage() {
               className="flex-1 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <Link
-              href="/admin/product/create"
+              href="/admin/user/create"
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex-shrink-0"
             >
-              Thêm sản phẩm mới
+              Thêm người dùng mới
             </Link>
           </div>
 
@@ -104,15 +113,15 @@ export default function ProductsPage() {
               <thead className="bg-blue-50 text-black">
                 <tr>
                   <th className="px-6 py-3 text-sm font-semibold text-gray-700">Hình ảnh</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tên sản phẩm</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Số lượng</th>
-                  <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700">Giá</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Mô tả</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tên người dùng</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+                  <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700">Trạng thái</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Quyền</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Hành động</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-black">
-                {products.map((item: any) => (
+                {users.map((item: any) => (
                   <tr key={item.id} className="hover:bg-blue-50 transition">
                     <td className="px-6 py-3">
                       <img
@@ -122,15 +131,13 @@ export default function ProductsPage() {
                       />
                     </td>
                     <td className="px-6 py-3 font-medium">{item.name}</td>
-                    <td className="px-6 py-3">{item.quantity}</td>
-                    <td className="px-6 py-3 text-center">
-                      {Number(item.price).toLocaleString("vi-VN", { maximumFractionDigits: 0 })} VNĐ
-                    </td>
-                    <td className="px-6 py-3 max-w-xs truncate">{item.description}</td>
+                    <td className="px-6 py-3">{item.email}</td>
+                    <td className="px-6 py-3 max-w-xs truncate">{statusLabels[item.status]}</td>
+                    <td className="px-6 py-3 max-w-xs truncate">{roleLabels[item.role]}</td>
                     <td className="px-6 py-3">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => router.push(`/admin/product/${item.id}`)}
+                          onClick={() => router.push(`/admin/user/${item.id}`)}
                           className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition"
                         >
                           Sửa
@@ -146,10 +153,10 @@ export default function ProductsPage() {
                     </td>
                   </tr>
                 ))}
-                {products.length === 0 && (
+                {users.length === 0 && (
                   <tr>
                     <td colSpan={6} className="text-center py-8 text-gray-500">
-                      Không tìm thấy sản phẩm
+                      Không tìm thấy người dùng
                     </td>
                   </tr>
                 )}
@@ -163,7 +170,7 @@ export default function ProductsPage() {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
-                  onClick={() => fetchProducts(page, searchTerm)}
+                  onClick={() => fetchUsers(page, searchTerm)}
                   className={`px-3 py-1 rounded border text-sm font-medium transition ${page === currentPage
                       ? "bg-blue-600 text-white border-blue-600"
                       : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"

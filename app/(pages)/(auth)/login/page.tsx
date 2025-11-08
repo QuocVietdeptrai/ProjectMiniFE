@@ -14,8 +14,8 @@ export default function LoginPage() {
 
         {/* Quên mật khẩu + Đăng ký */}
         <div className="flex justify-between items-center mt-4 text-sm">
-          <Link 
-            href="/forgotpassword" 
+          <Link
+            href="/forgotpassword"
             className="text-blue-600 font-medium hover:underline transition"
           >
             Quên mật khẩu?
