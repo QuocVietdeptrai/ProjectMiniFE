@@ -1,20 +1,23 @@
 "use client";
-import Link from "next/link";
-import FormResetPassword from "./FormResetPassword";
 
-export default function ForgotPasswordPage() {
+import { Suspense } from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const FormResetPassword = dynamic(() => import("./FormResetPassword"), { ssr: false });
+
+export default function ResetPasswordPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-100">
-        {/* Tiêu đề */}
         <h1 className="text-3xl font-bold text-center text-gray-900 mb-6 tracking-tight">
           Nhập mật khẩu mới
         </h1>
 
-        {/* Form */}
-        <FormResetPassword />
+        <Suspense>
+          <FormResetPassword />
+        </Suspense>
 
-        {/* Quay lại quên mật khẩu */}
         <div className="mt-5 text-center text-sm text-gray-600">
           <Link
             href="/otp"
