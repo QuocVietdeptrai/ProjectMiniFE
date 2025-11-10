@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 const menuItems = [
   { name: "Dashboard", href: "/admin/dashboard" },
   { name: "Sản phẩm", href: "/admin/product" },
-  { name: "Học sinh", href: "/admin/student" },
+  { name: "Sinh viên", href: "/admin/student" },
   { name: "Đơn hàng", href: "/admin/order" },
   { name: "Quản trị tài khoản", href: "/admin/user" },
 ];

@@ -110,7 +110,7 @@ export default function StudentsPage() {
               <thead className="bg-blue-50 text-black">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Avatar</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tên học sinh</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tên sinh viên</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ngày sinh</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Lớp</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Số điện thoại</th>

@@ -28,11 +28,11 @@ export default function CreateOrderPage() {
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/list`, {
+				const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/listOrder`, {
 					credentials: "include",
 				});
 				const data = await res.json();
-				if (data.status === "success") setProducts(data.data.data);
+				if (data.status === "success") setProducts(data.data);
 			} catch (error) {
 				console.error("Lỗi lấy danh sách sản phẩm:", error);
 			}

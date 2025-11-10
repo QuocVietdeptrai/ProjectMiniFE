@@ -52,7 +52,10 @@ export default function FormRegister() {
 
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+          },
+          
           body: JSON.stringify(dataFinal),
         })
           .then(res => res.json())
