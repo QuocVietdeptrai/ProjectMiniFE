@@ -25,8 +25,8 @@ export default function ProfilePage() {
           credentials: "include",
         });
         const data = await res.json();
-        if (data.code === "success") {
-          const u = data.user;
+        if (data.data.code === "success") {
+          const u = data.data.user;
           setUser(u);
           setForm({
             name: u.name,
@@ -72,10 +72,10 @@ export default function ProfilePage() {
       });
 
       const data = await res.json();
-      if (data.code === "success") {
+      if (data.data.code === "success") {
         window.location.reload();
       } else {
-        alert("Cập nhật thất bại: " + data.message);
+        alert("Cập nhật thất bại: " + data.data.message);
       }
     } catch (err) {
       console.error(err);

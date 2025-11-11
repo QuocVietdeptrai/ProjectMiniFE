@@ -13,8 +13,8 @@ export default function Taskbar() {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.code === "success" && data.user) {
-          setUser(data.user);
+        if (data.data?.code === "success" && data.data.user) {
+          setUser(data.data.user);
         }
       })
       .catch(err => console.error(err));

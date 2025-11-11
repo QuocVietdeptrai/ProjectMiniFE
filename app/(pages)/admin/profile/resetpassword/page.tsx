@@ -52,10 +52,10 @@ export default function FormResetPassword() {
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data.code === "error") {
-              alert(data.message);
+            if (data.data.code === "error") {
+              alert(data.data.message);
             }
-            if (data.code === "success") {
+            if (data.data.code === "success") {
               alert("Đổi mật khẩu thành công!");
               router.push("/admin/profile");
             }
