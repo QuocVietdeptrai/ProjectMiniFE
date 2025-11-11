@@ -27,8 +27,8 @@ export default function FormOTP() {
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data.code === "success") router.push(`/resetpassword?email=${email}`);
-            else alert(data.message);
+            if (data.data?.code === "success") router.push(`/resetpassword?email=${email}`);
+            else alert(data.data.message);
           })
           .catch(() => alert("Đã có lỗi xảy ra. Vui lòng thử lại."));
       });

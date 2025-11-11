@@ -56,7 +56,8 @@ export default function FormLogin() {
                         }
 
                         if (data.code === "success") {
-                            console.log("Đăng nhập thành công!");
+                            console.log(data);
+                            alert("Đăng nhập thành công!");
                             console.log(data);
                             router.push("/admin/dashboard");
                         }

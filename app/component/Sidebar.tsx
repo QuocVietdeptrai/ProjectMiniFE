@@ -23,7 +23,7 @@ export default function Sidebar() {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.code === "success") {
+        if (data.data?.code === "success") {
           router.push("/login");
         }
       })

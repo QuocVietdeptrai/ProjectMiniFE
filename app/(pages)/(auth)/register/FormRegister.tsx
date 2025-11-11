@@ -60,10 +60,10 @@ export default function FormRegister() {
         })
           .then(res => res.json())
           .then(data => {
-            if (data.code === "error") {
+            if (data.data?.code === "error") {
               alert(data.message);
             }
-            if (data.code === "success") {
+            if (data.data?.code === "success") {
               alert("Đăng ký thành công! Vui lòng đăng nhập.");
               router.push("/login");
             }

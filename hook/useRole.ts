@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
+// hooks/useRole.ts
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,6 +9,10 @@ interface User {
   name: string;
   email: string;
   role: string;
+  phone?: string;
+  address?: string;
+  image?: string;
+  created_at?: string;
 }
 
 export function useRole(allowedRoles: string[] = []) {
@@ -23,30 +25,36 @@ export function useRole(allowedRoles: string[] = []) {
     const fetchUser = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/check-auth`, {
-          credentials: "include", // gửi cookie token
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+          },
         });
 
         if (res.status === 401) {
-          // chưa login
           router.push("/login");
           return;
         }
 
+        if (!res.ok) throw new Error("Network error");
+
         const data = await res.json();
 
-        if (data.code === "success" && data.user) {
-          setUser(data.user);
+        // DÙNG data.data.user
+        if (data.data?.code === "success" && data.data?.user) {
+          setUser(data.data.user);
 
-          if (allowedRoles.length === 0 || allowedRoles.includes(data.user.role)) {
+          if (allowedRoles.length === 0 || allowedRoles.includes(data.data.user.role)) {
             setHasRole(true);
           } else {
-            // user không có quyền
-            router.push("/unauthorized"); // hoặc /login
+            router.push("/unauthorized");
           }
         } else {
           router.push("/login");
         }
       } catch (error) {
+        console.error("Check auth failed:", error);
         router.push("/login");
       } finally {
         setLoading(false);
@@ -54,7 +62,7 @@ export function useRole(allowedRoles: string[] = []) {
     };
 
     fetchUser();
-  }, []);
+  }, [router, allowedRoles]);
 
   return { user, hasRole, loading };
 }

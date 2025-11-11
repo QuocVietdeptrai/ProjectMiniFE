@@ -1,4 +1,6 @@
+// hooks/useAuth.ts
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -7,25 +9,39 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // gọi API /check-auth để check token
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/check-auth`, {
       method: "GET",
-      credentials: "include", // gửi cookie
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
     })
-      .then(async res => {
+      .then((res) => {
         if (res.status === 401) {
-          router.push("/login"); // chưa login thì quay về login
+          // router.push("/login");
+          throw new Error("Unauthorized");
+        }
+        if (!res.ok) throw new Error("Network error");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.data?.code === "error") {
+          alert(data.message || "Lỗi xác thực!");
+          router.push("/login");
+        } else if (data.data?.code === "success") {
+          alert("Đăng nhập thành công!");
+          console.log(data);
+          setLoading(false);
+          router.push("/admin/dashboard");
         } else {
-          const data = await res.json();
-          if (data.authenticated) {
-            setLoading(false);
-          } else {
-            router.push("/login");
-          }
+          router.push("/login");
         }
       })
-      .catch(() => router.push("/login"));
+      .catch((error) => {
+        console.error("Auth check failed:", error);
+        router.push("/login");
+      });
   }, [router]);
 
-  return loading; // true nếu đang check
+  return { loading };
 }

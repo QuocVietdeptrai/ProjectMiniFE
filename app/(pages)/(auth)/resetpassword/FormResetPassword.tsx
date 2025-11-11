@@ -32,10 +32,10 @@ export default function FormResetPassword() {
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data.code === "success") {
+            if (data.data?.code === "success") {
               alert("Đặt lại mật khẩu thành công!");
               router.push("/login");
-            } else alert(data.message);
+            } else alert(data.data.message);
           })
           .catch(() => alert("Đã có lỗi xảy ra. Vui lòng thử lại."));
       });

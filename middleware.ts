@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
 
     const data = await res.json();
 
-    if (data.code === "success") {
+    if (data.data?.code === "success") {
       // Token hợp lệ → cho phép truy cập page
       return NextResponse.next();
     } else {
