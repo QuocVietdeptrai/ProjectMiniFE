@@ -28,11 +28,11 @@ export default function EditProductPage() {
         });
         const data = await res.json();
 
-        if (data.status === "success" && data.data) {
-          setProduct(data.data);
-          setPreviewUrl(data.data.image);
+        if (data) {
+          setProduct(data);
+          setPreviewUrl(data.image);
         } else {
-          alert(data.message || "Không tìm thấy sản phẩm!");
+          alert("Không tìm thấy sản phẩm!");
           router.push("/admin/product");
         }
       } catch (err) {
@@ -123,17 +123,17 @@ export default function EditProductPage() {
           });
 
           const data = await res.json();
-
-          if (data.status === "success") {
+          if (res.ok && data.data) {
             alert("Cập nhật sản phẩm thành công!");
             router.push("/admin/product");
           } else {
-            alert(data.message || "Cập nhật thất bại!");
+            alert(data.message || "Có lỗi xảy ra!");
           }
         } catch (err) {
-          console.error(err);
+          console.error("Lỗi fetch:", err);
           alert("Lỗi kết nối server!");
         }
+
       });
 
     return () => validator.destroy();

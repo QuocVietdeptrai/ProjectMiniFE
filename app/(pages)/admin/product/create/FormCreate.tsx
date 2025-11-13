@@ -65,18 +65,16 @@ export default function FormCreateProduct() {
           credentials: "include",
           body: formData,
         })
-          .then((res) => {
-            if (!res.ok) throw new Error("Network error");
-            return res.json();
-          })
+          .then((res) => res.json())
           .then((data) => {
-            if (data.status === "success") {
+            if (data.data) {
               alert("Thêm sản phẩm thành công!");
               router.push("/admin/product");
             } else {
               alert(data.message || "Có lỗi xảy ra!");
             }
           })
+
           .catch((err) => {
             console.error(err);
             alert("Lỗi kết nối server!");
