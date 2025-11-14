@@ -41,10 +41,10 @@ export default function ProductsPage() {
       const res = await fetch(url.toString(), { credentials: "include" });
       const data = await res.json();
 
-      if (data.status === "success" && Array.isArray(data.data.data)) {
-        setUsers(data.data.data);
-        setCurrentPage(data.data.current_page);
-        setTotalPages(data.data.last_page);
+      if (data.status === "success" && Array.isArray(data.data)) {
+        setUsers(data.data);
+        setCurrentPage(data.pagination.current_page);
+        setTotalPages(data.pagination.last_page);
       } else {
         console.error("Không lấy được danh sách người dùng", data);
       }

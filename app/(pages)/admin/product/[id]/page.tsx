@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -19,15 +20,14 @@ export default function EditProductPage() {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load dữ liệu sản phẩm
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
-          credentials: "include",
-        });
-        const data = await res.json();
+    if (!id) return;
 
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
         if (data) {
           setProduct(data);
           setPreviewUrl(data.image);
@@ -35,15 +35,14 @@ export default function EditProductPage() {
           alert("Không tìm thấy sản phẩm!");
           router.push("/admin/product");
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         console.error(err);
         alert("Lỗi tải dữ liệu!");
-      } finally {
+      })
+      .finally(() => {
         setIsLoading(false);
-      }
-    };
-
-    if (id) fetchProduct();
+      });
   }, [id, router]);
 
   // Preview ảnh mới
@@ -58,7 +57,7 @@ export default function EditProductPage() {
     }
   };
 
-  // Validation + Submit (PATCH)
+  // Validation + Submit (dùng .then)
   useEffect(() => {
     if (!formRef.current || !product) return;
 
@@ -105,36 +104,39 @@ export default function EditProductPage() {
           errorMessage: "Chỉ chấp nhận ảnh JPG, PNG, WebP và dung lượng ≤ 5MB!",
         },
       ])
-      .onSuccess(async (event: any) => {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
+    .onSuccess((event: any) => {
+      event.preventDefault();
+      const form = event.target as HTMLFormElement;
+      const formData = new FormData(form);
 
-        // Nếu không chọn ảnh mới → gửi tên ảnh cũ
-        if (!formData.get("image") || !(formData.get("image") as File).size) {
-          formData.delete("image");
-        }
+      // Nếu không chọn ảnh mới → xóa field image
+      if (!formData.get("image") || !(formData.get("image") as File).size) {
+        formData.delete("image");
+      }
 
-        try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/update/${id}`, {
-            method: "POST",
-            credentials: "include",
-            body: formData,
-          });
-
-          const data = await res.json();
-          if (res.ok && data.data) {
-            alert("Cập nhật sản phẩm thành công!");
-            router.push("/admin/product");
-          } else {
-            alert(data.message || "Có lỗi xảy ra!");
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/update/${id}`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            // Nếu status không ok → ném lỗi
+            const errorData = await res.json().catch(() => ({}));
+            throw new Error(errorData.message || "Có lỗi xảy ra!");
           }
-        } catch (err) {
+          return res.json();
+        })
+        .then((data) => {
+          alert("Cập nhật sản phẩm thành công!");
+          router.push("/admin/product");
+        })
+        .catch((err) => {
           console.error("Lỗi fetch:", err);
-          alert("Lỗi kết nối server!");
-        }
+          alert(err.message || "Lỗi kết nối server!");
+        });
+    });
 
-      });
 
     return () => validator.destroy();
   }, [product, id, router]);

@@ -9,8 +9,9 @@ import { useEffect, useRef, useState } from "react";
 import JustValidate from "just-validate";
 import Image from "next/image";
 
+
 export default function EditStudentPage() {
-	const { user } = useRole(["admin", "teacher", "student_manager"]);
+	const { user } = useRole(["admin", "student_manager"]);
 	const { id } = useParams();
 	const router = useRouter();
 
@@ -19,31 +20,30 @@ export default function EditStudentPage() {
 	const [previewUrl, setPreviewUrl] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(true);
 
-	// Lấy dữ liệu sinh viên theo ID
+	// LẤY DỮ LIỆU SINH VIÊN THEO ID (dùng .then().catch())
 	useEffect(() => {
-		const fetchStudent = async () => {
-			try {
-				const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/students/${id}`, {
-					credentials: "include",
-				});
-				const data = await res.json();
+		if (!id) return;
 
-				if (data.status === "success" && data.data) {
-					setStudent(data.data);
-					setPreviewUrl(data.data.avatar);
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/students/${id}`, {
+			credentials: "include",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data) {
+					setStudent(data);
+					setPreviewUrl(data.avatar || "");
 				} else {
 					alert(data.message || "Không tìm thấy sinh viên!");
 					router.push("/admin/student");
 				}
-			} catch (err) {
-				console.error(err);
-				alert("Lỗi tải dữ liệu!");
-			} finally {
+			})
+			.catch((err) => {
+				console.error("Lỗi tải dữ liệu sinh viên:", err);
+				alert("Lỗi kết nối server!");
+			})
+			.finally(() => {
 				setIsLoading(false);
-			}
-		};
-
-		if (id) fetchStudent();
+			});
 	}, [id, router]);
 
 	// Preview ảnh khi chọn mới
@@ -58,7 +58,7 @@ export default function EditStudentPage() {
 		}
 	};
 
-	// Validation + Submit
+	// Validation + Submit (dùng .then().catch())
 	useEffect(() => {
 		if (!formRef.current || !student) return;
 
@@ -98,40 +98,40 @@ export default function EditStudentPage() {
 					errorMessage: "Chỉ chấp nhận ảnh JPG, PNG, WebP và dung lượng ≤ 5MB!",
 				},
 			])
-			.onSuccess(async (event: any) => {
+			.onSuccess((event: any) => {
 				event.preventDefault();
 				const form = event.target as HTMLFormElement;
 				const formData = new FormData(form);
 
-				// Nếu không chọn ảnh mới thì xoá field image để giữ ảnh cũ
+				// Nếu không chọn ảnh mới → xóa field để giữ ảnh cũ
 				if (!formData.get("avatar") || !(formData.get("avatar") as File).size) {
 					formData.delete("avatar");
 				}
 
-				try {
-					const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/students/update/${id}`, {
-						method: "POST",
-						credentials: "include",
-						body: formData,
+				fetch(`${process.env.NEXT_PUBLIC_API_URL}/students/update/${id}`, {
+					method: "POST",
+					credentials: "include",
+					body: formData,
+				})
+					.then((res) => res.json())
+					.then((data) => {
+						if (data.data.status === "success") {
+							alert("Cập nhật sinh viên thành công!");
+							router.push("/admin/student");
+						} else {
+							alert(data.message || "Cập nhật thất bại!");
+						}
+					})
+					.catch((err) => {
+						console.error("Lỗi cập nhật sinh viên:", err);
+						alert("Lỗi kết nối server!");
 					});
-
-					const data = await res.json();
-
-					if (data.status === "success") {
-						alert("Cập nhật sinh viên thành công!");
-						router.push("/admin/student");
-					} else {
-						alert(data.message || "Cập nhật thất bại!");
-					}
-				} catch (err) {
-					console.error(err);
-					alert("Lỗi kết nối server!");
-				}
 			});
 
 		return () => validator.destroy();
 	}, [student, id, router]);
 
+	// Loading & Auth
 	if (!user) return null;
 	if (isLoading) return <p className="p-8 text-center">Đang tải dữ liệu...</p>;
 	if (!student) return null;

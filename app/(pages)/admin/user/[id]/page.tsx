@@ -27,9 +27,9 @@ export default function EditUserPage() {
         });
         const data = await res.json();
 
-        if (data.status === "success" && data.data) {
-          setUserData(data.data);
-          setPreviewUrl(data.data.image || data.data.image_url || "");
+        if (data) {
+          setUserData(data);
+          setPreviewUrl(data.image || data.image_url || "");
         } else {
           alert(data.message);
           router.push("/admin/user");
