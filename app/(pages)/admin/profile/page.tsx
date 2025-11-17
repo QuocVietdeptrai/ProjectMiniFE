@@ -62,7 +62,7 @@ export default function ProfilePage() {
     formData.append("name", form.name);
     formData.append("phone", form.phone);
     formData.append("address", form.address);
-    if (avatarFile) formData.append("avatar", avatarFile);
+    if (avatarFile) formData.append("image", avatarFile);
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/update_profile`, {

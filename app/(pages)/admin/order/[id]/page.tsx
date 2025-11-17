@@ -141,7 +141,7 @@ export default function EditOrderPage() {
             customer_name: student.full_name,
             class: student.class,
             phone: student.phone,
-            order_date: orderDate,
+            order_date: new Date().toISOString().split("T")[0],
             status: status,
             payment_method: paymentMethod,
             total: total,
@@ -151,6 +151,7 @@ export default function EditOrderPage() {
                 id: item.product_id,
                 quantity: item.quantity,
                 price: item.price,
+                subtotal : item.quantity * item.price
               })),
           }),
         }
@@ -304,17 +305,6 @@ export default function EditOrderPage() {
                   <option value="canceled">Đã hủy</option>
                 </select>
               </div>
-            </div>
-
-            {/* Ngày đặt */}
-            <div>
-              <label className="block font-medium mb-2">Ngày đặt hàng</label>
-              <input
-                type="date"
-                value={orderDate}
-                onChange={(e) => setOrderDate(e.target.value)}
-                className="border px-3 py-2 rounded w-full"
-              />
             </div>
 
             {/* Tổng tiền */}

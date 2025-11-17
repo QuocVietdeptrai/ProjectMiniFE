@@ -94,7 +94,7 @@ export default function CreateOrderPage() {
 					phone: student.phone,
 					order_date: new Date().toISOString().split("T")[0],
 					status: "pending",
-					payment_method: paymentMethod, //Gửi phương thức thanh toán
+					payment_method: paymentMethod,
 					total: total,
 					products: orderItems
 						.filter((item) => item.product_id)
@@ -102,6 +102,7 @@ export default function CreateOrderPage() {
 							id: item.product_id,
 							quantity: item.quantity,
 							price: item.price,
+							subtotal : item.quantity * item.price
 						})),
 				}),
 			});
@@ -112,7 +113,7 @@ export default function CreateOrderPage() {
 				alert("Tạo đơn hàng thành công!");
 				router.push("/admin/order");
 			} else {
-				alert(data.message || "Lỗi khi tạo đơn hàng!");
+				alert(data.message);
 			}
 		} catch (err) {
 			console.error("Lỗi gửi đơn hàng:", err);

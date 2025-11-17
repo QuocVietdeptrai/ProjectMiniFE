@@ -12,8 +12,6 @@ export default function OrdersPage() {
   const { user } = useRole([
     "admin",
     "order_manager",
-    "product_manager",
-    "student_manager",
   ]);
 
   const router = useRouter();
@@ -48,12 +46,12 @@ export default function OrdersPage() {
       const res = await fetch(url.toString(), { credentials: "include" });
       const data = await res.json();
 
-      if (data.status === "success" && Array.isArray(data.data.data)) {
-        setOrders(data.data.data);
-        setCurrentPage(data.data.current_page);
-        setTotalPages(data.data.last_page);
+      if (data.status === "success" && Array.isArray(data.data)) {
+        setOrders(data.data);
+        setCurrentPage(data.pagination.current_page);
+        setTotalPages(data.pagination.last_page);
       } else {
-        console.error("Không lấy được danh sách đơn hàng", data);
+        console.error("Không lấy được danh sách đơn hàng", data.data);
       }
     } catch (err) {
       console.error("Lỗi fetch đơn hàng:", err);
@@ -145,7 +143,7 @@ export default function OrdersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-3">
-                      {new Date(order.created_at).toLocaleDateString("vi-VN")}
+                      {new Date(order.order_date).toLocaleDateString("vi-VN")}
                     </td>
                     <td className="px-6 py-3 flex gap-2">
                       <button
